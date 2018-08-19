@@ -1,5 +1,7 @@
 package resource;
 
+import com.mongodb.client.model.geojson.Point;
+import com.mongodb.client.model.geojson.Position;
 import config.User;
 import config.UserDao;
 import org.bson.types.ObjectId;
@@ -9,11 +11,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-import static org.mongodb.morphia.geo.PointBuilder.pointBuilder;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
-/*@Consumes(MediaType.APPLICATION_JSON)*/
+@Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
 
     private UserDao userDao;
@@ -22,19 +23,16 @@ public class UserResource {
         this.userDao = userService;
     }
 
-    @POST
+    @GET
     @Path("add")
     public String request() {
-
-        User user = new User(new ObjectId(), "", "", pointBuilder().latitude(2F).longitude(2F).build());
+        User user = new User(new ObjectId(), "", "", new double[]{2, 2});
         return userDao.createUser(user).toString();
     }
 
     @GET
-    @Path("get/")
-    public User get(
-            @QueryParam("user_id") ObjectId userId
-    ){
+    @Path("get")
+    public User get(@QueryParam("user_id") ObjectId userId){
         return userDao.get(userId);
     }
 
@@ -46,12 +44,11 @@ public class UserResource {
 
     @GET
     @Path("near")
-    public List<User> getEntries(
+    public Object getEntries(
             @NotNull @QueryParam("la") Float lat,
             @NotNull @QueryParam("lo") Float lon,
             @DefaultValue("10") @QueryParam("range") Integer range
     ) {
         return userDao.getUsers(lat, lon, range);
     }
-
 }

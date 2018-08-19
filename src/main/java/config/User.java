@@ -15,16 +15,9 @@ import json.ObjectIdSerializer;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Property;
-import org.mongodb.morphia.geo.GeoJson;
-import org.mongodb.morphia.geo.Point;
+import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.utils.IndexDirection;
 
-import java.security.Principal;
-import java.util.List;
-
-/**
- * Created by gkvm on 5/27/17.
- */
 @JsonSnakeCase
 @Entity(value = "user", noClassnameStored = true)
 public class User {
@@ -34,7 +27,8 @@ public class User {
     private ObjectId id;
     private String phone;
     private String name;
-    private Point location;
+    @Indexed(IndexDirection.GEO2D)
+    private double[] location = new double[2];
 
     public User() {
     }
@@ -44,7 +38,7 @@ public class User {
             @JsonProperty("id") @JsonSerialize(using = ObjectIdSerializer.class) ObjectId id,
             @JsonProperty("phone") String phone,
             @JsonProperty("name") String name,
-            @JsonProperty("location") Point location
+            @JsonProperty("location") final double[] location
     ) {
         this.id = id;
         this.phone = phone;
@@ -64,8 +58,7 @@ public class User {
         return name;
     }
 
-    //@JsonIgnore
-    public Point getLocation() {
+    public double[] getLocation() {
         return location;
     }
 }

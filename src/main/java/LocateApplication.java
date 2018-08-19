@@ -3,7 +3,6 @@ import config.Configuration;
 import config.MongoClientManager;
 import config.MongoFactory;
 import config.UserDao;
-import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.client.JerseyClientConfiguration;
@@ -14,7 +13,6 @@ import io.dropwizard.views.ViewBundle;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
-import org.omg.PortableInterceptor.USER_EXCEPTION;
 import resource.UserResource;
 
 import javax.servlet.DispatcherType;
@@ -49,6 +47,7 @@ public class LocateApplication extends io.dropwizard.Application<Configuration> 
         final MongoFactory mongoFactory = new MongoFactory();
         final MongoClient mongoClient = mongoFactory.build(configuration);
         final MongoClientManager mongoClientManager = new MongoClientManager(mongoClient);
+
 
         final Morphia morphia = new Morphia();
         morphia.mapPackage("dao");
